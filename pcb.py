@@ -112,7 +112,7 @@ def check_resetbutton():
             if counter > vars.reset_hold_long:  # if you hold it more than 5 seconds if will toggle the bootupvideo
                 toggle("video")
                 led.blink(10, 0.5)
-        elif (counter <= vars.reset_hold_short):  # if you dont hold it it will toggle a software reboot
+        else:
             os.system("killall emulationstation")
             os.system("sudo reboot")
 
