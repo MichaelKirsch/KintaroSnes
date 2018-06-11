@@ -91,7 +91,7 @@ def toggle(toggle_this):  #change one of the values in the config file
         parser.write(configfile)
 
 def Falling_Power(channel):
-    time.sleep(0.5)
+    time.sleep(0.5) #debounce
     if (GPIO.input(pcb_components["POWER"]) == GPIO.HIGH) and GPIO.input(pcb_components["CHECK_PCB"]) == GPIO.LOW:  # shutdown funktion if the powerswitch is toggled
         led.toggle(0)
         fan(0)
