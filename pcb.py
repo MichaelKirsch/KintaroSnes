@@ -28,7 +28,7 @@ class vars():
     fan_starttemp = 60
     reset_hold_short = 100
     reset_hold_long = 500
-    debounce_time = 0.01
+    debounce_time = 0.1
     counter_time = 0.01
 
 GPIO.setmode(GPIO.BOARD) #Use the same layout as the pins
@@ -115,7 +115,7 @@ def Falling_Reset(channel):
                 led.toggle(1)
         else:
             os.system("killall emulationstation")
-            time.sleep(5)
+            time.sleep(2)
             os.system("sudo reboot")
 
 def PCB_Pull(channel):
@@ -124,19 +124,16 @@ def PCB_Pull(channel):
 if (GPIO.input(pcb_components["POWER"]) == GPIO.HIGH) and GPIO.input(pcb_components["CHECK_PCB"]) == GPIO.LOW:
     os.system("sudo shutdown -h now")
 
-GPIO.cleanup()
 
 GPIO.add_event_detect(pcb_components["CHECK_PCB"],GPIO.RISING,callback=PCB_Pull)
 
-time.sleep(1)
+time.sleep(0.1)
 
 if return_config_bool("pcb") and GPIO.input(pcb_components["CHECK_PCB"])==GPIO.LOW: #check if there is an pcb and if there is then attach the interrupts
     led.toggle(0.5)
     GPIO.add_event_detect(pcb_components["RESET"], GPIO.FALLING, callback=Falling_Reset)
     GPIO.add_event_detect(pcb_components["POWER"], GPIO.FALLING, callback=Falling_Power)
 
-
-    #check for interrupts :D
 while True:
     time.sleep(5)
     led.toggle(1)
