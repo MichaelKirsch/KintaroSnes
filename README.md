@@ -3,7 +3,8 @@
 
 ## Packaging
 
-for packaging use the fpm **https://github.com/jordansissel/fpm** and then run folling command to get a .deb package: 
+for packaging use the fpm **https://github.com/jordansissel/fpm** and 
+then run following command to get a .deb package: 
 
  fpm --log error --after-install install.sh --after-remove  uninstall.sh --architecture armhf --name kintarosnes --version x.x.x -s dir -t deb --vendor Michael --description "Kintaro SNES PCB Driver"  -d python-rpi.gpio -d python3-dialog -d python3-rpi.gpio .
 
