@@ -154,6 +154,7 @@ class SNES:
                 GPIO.add_event_detect(self.reset_pin, GPIO.FALLING, callback=self.reset_interrupt)
                 GPIO.add_event_detect(self.power_pin, GPIO.RISING, callback=self.power_interrupt)
         else:       #no pcb attached so lets exit
+            GPIO.cleanup()
             exit()
 
 snes = SNES()
