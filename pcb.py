@@ -51,6 +51,7 @@ class SNES:
         #Set the GPIOs
 
         GPIO.setmode(GPIO.BOARD)  # Use the same layout as the pins
+        GPIO.setwarnings(False)
         GPIO.setup(self.led_pin, GPIO.OUT)  # LED Output
         GPIO.setup(self.fan_pin, GPIO.OUT)  # FAN Output
         GPIO.setup(self.power_pin, GPIO.IN)  # set pin as input
@@ -144,9 +145,9 @@ class SNES:
             self.fancontrol(self.fan_hysteresis,self.fan_starttemp)  # fan starts at 60 degrees and has a 5 degree hysteresis
 
     def attach_interrupts(self):
-        if self.return_config_bool("pcb") and GPIO.input(self.check_pin == GPIO.LOW):  # check if there is an pcb and if so attach the interrupts
+        if self.return_config_bool("pcb") and GPIO.input(self.check_pin) == GPIO.LOW:  # check if there is an pcb and if so attach the interrupts
             GPIO.add_event_detect(self.check_pin, GPIO.RISING,callback=self.pcb_interrupt)  # if not the interrupt gets attached
-            if GPIO.input(self.power_pin == GPIO.LOW): #when the system gets startet in the on position it gets shutdown
+            if GPIO.input(self.power_pin) == GPIO.LOW: #when the system gets startet in the on position it gets shutdown
                 os.system("sudo shutdown -h now")
             else:
                 self.led(1)
