@@ -19,7 +19,7 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 fi
 arch=`uname -m`
-if [ "$arch" == "armv7l" ] 
+if [ "$arch" == "armv6l" ] || [ "$arch" == "armv7l" ]
 then
    echo "Raspberry detected"
    install_script
