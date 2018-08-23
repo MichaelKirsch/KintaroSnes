@@ -39,6 +39,7 @@ class SNES:
         self.debounce_time = 0.1
         self.counter_time = 0.01
         self.delay_until_reset = 2
+        self.is_pwm = False
 
         #path
 
@@ -53,11 +54,15 @@ class SNES:
         GPIO.setmode(GPIO.BOARD)  # Use the same layout as the pins
         GPIO.setwarnings(False)
         GPIO.setup(self.led_pin, GPIO.OUT)  # LED Output
-        GPIO.setup(self.fan_pin, GPIO.OUT)  # FAN Output
+        GPIO.setup(self.fan_pin, GPIO.OUT)  # Fan normal Output
         GPIO.setup(self.power_pin, GPIO.IN)  # set pin as input
         GPIO.setup(self.reset_pin, GPIO.IN,
                    pull_up_down=GPIO.PUD_UP)  # set pin as input and switch on internal pull up resistor
         GPIO.setup(self.check_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        if self.return_config_bool("PWM_FAN"):
+            self.is_pwm = True
+            self.pwm=GPIO.PWM(self.fan_pin,50)
+
 
     def power_interrupt(self, channel):
         time.sleep(self.debounce_time)  # debounce
@@ -85,7 +90,7 @@ class SNES:
                     self.led(1)
             else:
                 os.system("killall emulationstation")
-                time.sleep(self.delay_until_reset)
+                self.blink(15, 0.1)
                 os.system("sudo reboot")
 
     def pcb_interrupt(self, channel):
@@ -119,11 +124,15 @@ class SNES:
         if status == 0:
             GPIO.output(self.fan_pin, GPIO.LOW)
 
-    def fancontrol(self,hysteresis,starttemp):  #read the temp and have a buildin hysteresis
+    def fancontrol_normal(self,hysteresis,starttemp):  #read the temp and have a buildin hysteresis
         if self.temp() > starttemp:
             self.fan(1)
         if self.temp() < starttemp-hysteresis:
             self.fan(0)
+
+    def pwm_fancontrol(self,hysteresis, starttemp, temp):
+        perc = 100 * ((temp - (starttemp - hysteresis)) / (starttemp - (starttemp - hysteresis)))
+        self.pwm.ChangeDutyCycle(perc)
 
     def change_config_value(self,toggle_this):  #change one of the values in the config file
         parser = configparser.ConfigParser()
@@ -142,7 +151,10 @@ class SNES:
 
     def check_fan(self):
         if self.return_config_bool("fan"):  # check if the fan is activated in the config
-            self.fancontrol(self.fan_hysteresis,self.fan_starttemp)  # fan starts at 60 degrees and has a 5 degree hysteresis
+            if self.is_pwm:
+                self.pwm_fancontrol(self.fan_hysteresis,self.fan_starttemp,self.temp())
+            else:
+                self.fancontrol_normal(self.fan_hysteresis,self.fan_starttemp)  # fan starts at 60 degrees and has a 5 degree hysteresis
 
     def attach_interrupts(self):
         if self.return_config_bool("pcb") and GPIO.input(self.check_pin) == GPIO.LOW:  # check if there is an pcb and if so attach the interrupts
