@@ -34,6 +34,8 @@ class SNES:
 
         self.fan_hysteresis = 5
         self.fan_starttemp = 60
+        self.fan_hysteresis_pwm = 20
+        self.fan_starttemp_pwm = 60
         self.reset_hold_short = 100
         self.reset_hold_long = 500
         self.debounce_time = 0.1
@@ -131,8 +133,9 @@ class SNES:
             self.fan(0)
 
     def pwm_fancontrol(self,hysteresis, starttemp, temp):
-        perc = 100 * ((temp - (starttemp - hysteresis)) / (starttemp - (starttemp - hysteresis)))
-        self.pwm.ChangeDutyCycle(perc)
+        perc = 100.0 * ((temp - (starttemp - hysteresis)) / (starttemp - (starttemp - hysteresis)))
+        perc=min(max(perc, 0.0), 100.0)
+        self.pwm.ChangeDutyCycle(float(perc))
 
     def change_config_value(self,toggle_this):  #change one of the values in the config file
         parser = configparser.ConfigParser()
@@ -152,7 +155,7 @@ class SNES:
     def check_fan(self):
         if self.return_config_bool("fan"):  # check if the fan is activated in the config
             if self.is_pwm:
-                self.pwm_fancontrol(self.fan_hysteresis,self.fan_starttemp,self.temp())
+                self.pwm_fancontrol(self.fan_hysteresis_pwm,self.fan_starttemp_pwm,self.temp())
             else:
                 self.fancontrol_normal(self.fan_hysteresis,self.fan_starttemp)  # fan starts at 60 degrees and has a 5 degree hysteresis
 
