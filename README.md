@@ -2,10 +2,7 @@
 
 ## Features
 
-1.Interrupt driven buttons
-2.PWM-Fanspeed contoll
-3.Config-File
-
+This script uses interrupt controlled buttons for low cpu usage, a speedcontrolled fan (PWM) and a configfile to controll the functions
 ## Packaging
 
 for packaging use the fpm **https://github.com/jordansissel/fpm** and 
