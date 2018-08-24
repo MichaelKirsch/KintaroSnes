@@ -64,6 +64,7 @@ class SNES:
         if self.return_config_bool("PWM_FAN"):
             self.is_pwm = True
             self.pwm=GPIO.PWM(self.fan_pin,50)
+            self.pwm.start(0)
 
 
     def power_interrupt(self, channel):
