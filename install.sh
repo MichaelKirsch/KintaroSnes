@@ -21,7 +21,6 @@ fi
 arch=`uname -m`
 if [ "$arch" == "armv6l" ] || [ "$arch" == "armv7l" ]
 then
-   echo "Raspberry detected"
    install_script
 else 
    echo "This script will only run on RaspberryPi"

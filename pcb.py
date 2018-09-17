@@ -73,7 +73,7 @@ class SNES:
                 self.check_pin) == GPIO.LOW:  # shutdown function if the powerswitch is toggled
             self.led(0)  # led and fan off
             os.system("killall emulationstation") #end emulationstation
-            self.blink(20, 0.1) #wait for the metadata to be safed
+            self.blink(30, 0.1) #wait for the metadata to be safed
             self.fan(0)
             os.system("sudo shutdown -h now")
 
