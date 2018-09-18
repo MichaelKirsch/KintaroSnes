@@ -2,37 +2,16 @@
 
 
 
-rp_module_id="powerblock"
-rp_module_desc="PowerBlock Driver"
+rp_module_id="kintarosnes"
+rp_module_desc="Snes PCB Driver"
 rp_module_section="driver"
 rp_module_flags="noinstclean"
-rp_module_help="Please note that you need to manually enable or disable the PowerBlock Service in the Configuration section. IMPORTANT: If the service is enabled and the power switch functionality is enabled (which is the default setting) in the config file, you need to have a switch connected to the PowerBlock."
-
-function depends_kintaro() {
-    local depends=(cmake doxygen)
-    isPlatform "rpi" && depends+=(libraspberrypi-dev)
-
-    getDepends "${depends[@]}"
-}
-
-function sources_kintaro() {
-    gitPullOrClone "$md_inst" https://github.com/petrockblog/PowerBlock.git
-}
-
-function build_kintaro() {
-    cd "$md_inst"
-    rm -rf "build"
-    mkdir build
-    cd build
-    cmake ..
-    make
-    md_ret_require="$md_inst/build/powerblock"
-}
+rp_module_help="Keep in mind that ..."
 
 function update_kintaro() {
     # install from there to system folders
-    cd "$md_inst/build"
-    make install
+    sudo apt-get update
+    sudo apt-get upgrade kintarosnes
 }
 
 function gui_kintaro() {
@@ -58,6 +37,5 @@ function gui_kintaro() {
 }
 
 function remove_kintaro() {
-    make -C "$md_inst/build" uninstallservice
-    make -C "$md_inst/build" uninstall
+    sudo ./opt/kintaro/remove.sh
 }
