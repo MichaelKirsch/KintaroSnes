@@ -61,10 +61,27 @@ class SNES:
         GPIO.setup(self.reset_pin, GPIO.IN,
                    pull_up_down=GPIO.PUD_UP)  # set pin as input and switch on internal pull up resistor
         GPIO.setup(self.check_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        if self.return_config_bool("PWM_FAN"):
-            self.is_pwm = True
-            self.pwm=GPIO.PWM(self.fan_pin,50)
-            self.pwm.start(0)
+        pwm_var = self.return_config_bool("PWM_FAN")
+        if pwm_var is not "False":
+            if pwm_var is "1":
+                self.is_pwm = True
+                self.fan_hysteresis_pwm = 20
+                self.fan_starttemp_pwm = 50
+                self.pwm=GPIO.PWM(self.fan_pin,50)
+                self.pwm.start(0)
+            if pwm_var is "2":
+                self.is_pwm = True
+                self.fan_hysteresis_pwm = 20
+                self.fan_starttemp_pwm = 60
+                self.pwm=GPIO.PWM(self.fan_pin,50)
+                self.pwm.start(0)
+            if pwm_var is "3":
+                self.is_pwm = True
+                self.fan_hysteresis_pwm = 20
+                self.fan_starttemp_pwm = 70
+                self.pwm=GPIO.PWM(self.fan_pin,50)
+                self.pwm.start(0)
+
 
 
     def power_interrupt(self, channel):

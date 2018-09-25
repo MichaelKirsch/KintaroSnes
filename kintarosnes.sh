@@ -7,19 +7,25 @@ rp_module_section="config"
 function pwm_menu() {
     local cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option." 22 86 16)
     local options=(
-        1 "Start at 40 deg. 100% at 60 deg."
-        2 "Start at 50 deg. 100% at 70 deg."
+        1 "100% at 50 deg"
+        2 "100% at 60 deg"
+        3 "100% at 70 deg"
     )
     local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
     if [[ -n "$choice" ]]; then
         case "$choice" in
             1)
+                python /opt/kintaro/start/json.py -v "PWM_FAN" -s "1"
 
-                printMsgs "dialog" "Enabled ControlBlock driver."
+                printMsgs "set PWM to 50 deg"
                 ;;
             2)
-                #change to normal fan here
-                printMsgs "Using default I/O-Fan controll !"
+                python /opt/kintaro/start/json.py -v "PWM_FAN" -s "2"
+                printMsgs "set PWM to 60 deg"
+                ;;
+            3)
+                python /opt/kintaro/start/json.py -v "PWM_FAN" -s "3"
+                printMsgs "set PWM to 70 deg"
                 ;;
         esac
     fi
@@ -31,6 +37,7 @@ function change_fan() {
     local options=(
         1 "Activate and setup PWM-Fan"
         2 "Use default fan mode"
+        3 "No fan at all"
 
     )
     local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
@@ -41,8 +48,15 @@ function change_fan() {
                 printMsgs "dialog" "Enabled ControlBlock driver."
                 ;;
             2)
-                #change to normal fan here
+                python /opt/kintaro/start/json.py -v "Fan" -s "True"
+                python /opt/kintaro/start/json.py -v "PWM_FAN" -s "False"
                 printMsgs "Using default I/O-Fan controll !"
+                ;;
+
+            3)
+                python /opt/kintaro/start/json.py -v "PWM_FAN" -s "False"
+                python /opt/kintaro/start/json.py -v "Fan" -s "False"
+                printMsgs "No Fan !"
                 ;;
         esac
     fi
@@ -70,6 +84,38 @@ function remove() {
     fi
 }
 
+function pcb() {
+    local cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option." 22 86 16)
+    local options=(
+        1 "LED off"
+        2 "LED on"
+        3 "Buttons on"
+        4 "Buttons off"
+    )
+    local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+    if [[ -n "$choice" ]]; then
+        case "$choice" in
+            1)
+                printMsgs "Aborted !"
+                ;;
+            2)
+                printMsgs "Uninstalling !"
+                sudo dpkg -u kintarosnes
+                ;;
+            3)
+                printMsgs "Uninstalling !"
+                sudo dpkg -u kintarosnes
+                ;;
+            4)
+                printMsgs "Uninstalling !"
+                sudo dpkg -u kintarosnes
+                ;;
+        esac
+    fi
+}
+
+
+
 function gui_kintaro() {
 
     while true; do
@@ -92,7 +138,7 @@ function gui_kintaro() {
                     change_fan
                     ;;
                 X)
-                    remove_device_bluetooth
+                    pcb
                     ;;
                 D)
                     display_active_and_registered_bluetooth
