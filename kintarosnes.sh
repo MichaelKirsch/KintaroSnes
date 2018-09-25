@@ -9,7 +9,6 @@ function pwm_menu() {
     local options=(
         1 "Start at 40 deg. 100% at 60 deg."
         2 "Start at 50 deg. 100% at 70 deg."
-
     )
     local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
     if [[ -n "$choice" ]]; then
@@ -49,25 +48,45 @@ function change_fan() {
     fi
 }
 
+
+function remove() {
+    local cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option." 22 86 16)
+    local options=(
+        1 "Abort"
+        2 "Uninstall kintaro driver"
+
+    )
+    local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+    if [[ -n "$choice" ]]; then
+        case "$choice" in
+            1)
+                printMsgs "Aborted !"
+                ;;
+            2)
+                printMsgs "Uninstalling !"
+                sudo dpkg -u kintarosnes
+                ;;
+        esac
+    fi
+}
+
 function gui_kintaro() {
-   addAutoConf "8bitdo_hack" 0
 
     while true; do
         local connect_mode="$(_get_connect_mode)"
 
-        local cmd=(dialog --backtitle "$__backtitle" --menu "Configure Bluetooth Devices" 22 76 16)
+        local cmd=(dialog --backtitle "$__backtitle" --menu "Configure Kintaro Driver" 22 76 16)
         local options=(
-            R "Fan-Setup"
-            X "Update the package"
-            D "Play custom video"
-            U "LED"
+            R "Fan-Options"
+            X "PCB-Options"
+            D "Start Options"
+            U "Update the package"
             C "Remove Kintaro Driver"
         )
 
         local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
         if [[ -n "$choice" ]]; then
-            # temporarily restore Bluetooth stack (if needed)
-            service sixad status >/dev/null && sixad -r
+
             case "$choice" in
                 R)
                     change_fan
@@ -79,10 +98,12 @@ function gui_kintaro() {
                     display_active_and_registered_bluetooth
                     ;;
                 U)
-                    udev_bluetooth
+                    printMsgs "Updating Package !"
+                    sudo apt-get update
+                    sudo apt-get upgrade kintarosnes
                     ;;
                 C)
-                    connect_bluetooth
+                    remove
                     ;;
                 M)
                     connect_mode_bluetooth
