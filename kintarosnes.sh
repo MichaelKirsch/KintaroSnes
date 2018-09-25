@@ -45,7 +45,7 @@ function change_fan() {
         case "$choice" in
             1)
                 pwm_menu
-                printMsgs "dialog" "Enabled ControlBlock driver."
+
                 ;;
             2)
                 python /opt/kintaro/start/json.py -v "Fan" -s "True"
@@ -87,28 +87,19 @@ function remove() {
 function pcb() {
     local cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option." 22 86 16)
     local options=(
-        1 "LED off"
-        2 "LED on"
-        3 "Buttons on"
-        4 "Buttons off"
+        1 "Buttons on"
+        2 "Buttons off"
     )
     local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
     if [[ -n "$choice" ]]; then
         case "$choice" in
             1)
-                printMsgs "Aborted !"
+                printMsgs "PCB on"
+                python /opt/kintaro/start/json.py -v "PCB" -s "True"
                 ;;
             2)
-                printMsgs "Uninstalling !"
-                sudo dpkg -u kintarosnes
-                ;;
-            3)
-                printMsgs "Uninstalling !"
-                sudo dpkg -u kintarosnes
-                ;;
-            4)
-                printMsgs "Uninstalling !"
-                sudo dpkg -u kintarosnes
+                printMsgs "PCB off"
+                python /opt/kintaro/start/json.py -v "PCB" -s "False"
                 ;;
         esac
     fi
@@ -117,10 +108,7 @@ function pcb() {
 
 
 function gui_kintaro() {
-
-    while true; do
-        local connect_mode="$(_get_connect_mode)"
-
+        while true; do
         local cmd=(dialog --backtitle "$__backtitle" --menu "Configure Kintaro Driver" 22 76 16)
         local options=(
             R "Fan-Options"
@@ -155,6 +143,8 @@ function gui_kintaro() {
                     connect_mode_bluetooth
                     ;;
             esac
+        else
+            break
         fi
     done
 }
