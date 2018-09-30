@@ -126,6 +126,33 @@ function startoptions() {
     fi
 }
 
+function updateoptions() {
+    local cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option." 22 86 16)
+    local options=(
+        1 "Manual Update now"
+        2 "Autoupdate on"
+        3 "Autoupdate off"
+    )
+    local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+    if [[ -n "$choice" ]]; then
+        case "$choice" in
+            1)
+                printMsgs "Video on"
+                sudo apt-get install --only-upgrade kintarosnes
+                ;;
+            2)
+                printMsgs "Autoupdate on"
+                python3 /opt/kintaro/start/json.py -v "Update" -s "True"
+                ;;
+            3)
+                printMsgs "Autoupdate off"
+                python3 /opt/kintaro/start/json.py -v "Update" -s "False"
+                ;;
+        esac
+    fi
+}
+
+
 function gui_kintaro() {
         while true; do
         local cmd=(dialog --backtitle "$__backtitle" --menu "Configure Kintaro Driver" 22 76 16)
@@ -152,8 +179,7 @@ function gui_kintaro() {
                     startoptions
                     ;;
                 U)
-                    printMsgs "Updating Package !"
-                    sudo apt-get install --only-upgrade kintarosnes
+                    updateoptions
                     ;;
                 C)
                     remove

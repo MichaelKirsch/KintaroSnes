@@ -51,6 +51,12 @@ class SNES:
         self.config_file = self.kintaro_folder + self.start_folder + "kintaro.config"
         self.temp_command = 'vcgencmd measure_temp'
 
+        #Check for Update
+
+        Updatevar = self.return_config_bool("Update")
+        if Updatevar is "True":
+            os.system("sudo apt-get install --only-upgrade kintarosnes")
+
         #Set the GPIOs
 
         GPIO.setmode(GPIO.BOARD)  # Use the same layout as the pins
