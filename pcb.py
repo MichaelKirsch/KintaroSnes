@@ -51,6 +51,12 @@ class SNES:
         self.config_file = self.kintaro_folder + self.start_folder + "kintaro.config"
         self.temp_command = 'vcgencmd measure_temp'
 
+        #Check for Update
+
+        Updatevar = self.return_config_bool("Update")
+        if Updatevar is "True":
+            os.system("sudo apt-get install --only-upgrade kintarosnes")
+
         #Set the GPIOs
 
         GPIO.setmode(GPIO.BOARD)  # Use the same layout as the pins
@@ -61,10 +67,27 @@ class SNES:
         GPIO.setup(self.reset_pin, GPIO.IN,
                    pull_up_down=GPIO.PUD_UP)  # set pin as input and switch on internal pull up resistor
         GPIO.setup(self.check_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        if self.return_config_bool("PWM_FAN"):
-            self.is_pwm = True
-            self.pwm=GPIO.PWM(self.fan_pin,50)
-            self.pwm.start(0)
+        pwm_var = self.return_config_bool("PWM_FAN")
+        if pwm_var is not "False":
+            if pwm_var is "1":
+                self.is_pwm = True
+                self.fan_hysteresis_pwm = 20
+                self.fan_starttemp_pwm = 50
+                self.pwm=GPIO.PWM(self.fan_pin,50)
+                self.pwm.start(0)
+            if pwm_var is "2":
+                self.is_pwm = True
+                self.fan_hysteresis_pwm = 20
+                self.fan_starttemp_pwm = 60
+                self.pwm=GPIO.PWM(self.fan_pin,50)
+                self.pwm.start(0)
+            if pwm_var is "3":
+                self.is_pwm = True
+                self.fan_hysteresis_pwm = 20
+                self.fan_starttemp_pwm = 70
+                self.pwm=GPIO.PWM(self.fan_pin,50)
+                self.pwm.start(0)
+
 
 
     def power_interrupt(self, channel):
@@ -73,7 +96,7 @@ class SNES:
                 self.check_pin) == GPIO.LOW:  # shutdown function if the powerswitch is toggled
             self.led(0)  # led and fan off
             os.system("killall emulationstation") #end emulationstation
-            self.blink(20, 0.1) #wait for the metadata to be safed
+            self.blink(30, 0.1) #wait for the metadata to be safed
             self.fan(0)
             os.system("sudo shutdown -h now")
 
