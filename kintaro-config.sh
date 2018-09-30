@@ -15,16 +15,16 @@ function pwm_menu() {
     if [[ -n "$choice" ]]; then
         case "$choice" in
             1)
-                python /opt/kintaro/start/json.py -v "PWM_FAN" -s "1"
+                python3 /opt/kintaro/start/json.py -v "PWM_FAN" -s "1"
 
                 printMsgs "set PWM to 50 deg"
                 ;;
             2)
-                python /opt/kintaro/start/json.py -v "PWM_FAN" -s "2"
+                python3 /opt/kintaro/start/json.py -v "PWM_FAN" -s "2"
                 printMsgs "set PWM to 60 deg"
                 ;;
             3)
-                python /opt/kintaro/start/json.py -v "PWM_FAN" -s "3"
+                python3 /opt/kintaro/start/json.py -v "PWM_FAN" -s "3"
                 printMsgs "set PWM to 70 deg"
                 ;;
         esac
@@ -48,14 +48,14 @@ function change_fan() {
 
                 ;;
             2)
-                python /opt/kintaro/start/json.py -v "Fan" -s "True"
-                python /opt/kintaro/start/json.py -v "PWM_FAN" -s "False"
+                python3 /opt/kintaro/start/json.py -v "Fan" -s "True"
+                python3 /opt/kintaro/start/json.py -v "PWM_FAN" -s "False"
                 printMsgs "Using default I/O-Fan controll !"
                 ;;
 
             3)
-                python /opt/kintaro/start/json.py -v "PWM_FAN" -s "False"
-                python /opt/kintaro/start/json.py -v "Fan" -s "False"
+                python3 /opt/kintaro/start/json.py -v "PWM_FAN" -s "False"
+                python3 /opt/kintaro/start/json.py -v "Fan" -s "False"
                 printMsgs "No Fan !"
                 ;;
         esac
@@ -95,17 +95,36 @@ function pcb() {
         case "$choice" in
             1)
                 printMsgs "PCB on"
-                python /opt/kintaro/start/json.py -v "PCB" -s "True"
+                python3 /opt/kintaro/start/json.py -v "PCB" -s "True"
                 ;;
             2)
                 printMsgs "PCB off"
-                python /opt/kintaro/start/json.py -v "PCB" -s "False"
+                python3 /opt/kintaro/start/json.py -v "PCB" -s "False"
                 ;;
         esac
     fi
 }
 
-
+function startoptions() {
+    local cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option." 22 86 16)
+    local options=(
+        1 "Video on"
+        2 "Video off"
+    )
+    local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+    if [[ -n "$choice" ]]; then
+        case "$choice" in
+            1)
+                printMsgs "Video on"
+                python3 /opt/kintaro/start/json.py -v "Video" -s "True"
+                ;;
+            2)
+                printMsgs "Video off"
+                    python3 /opt/kintaro/start/json.py -v "Video" -s "False"
+                ;;
+        esac
+    fi
+}
 
 function gui_kintaro() {
         while true; do
@@ -116,6 +135,7 @@ function gui_kintaro() {
             D "Start Options"
             U "Update the package"
             C "Remove Kintaro Driver"
+            M "Reboot now"
         )
 
         local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
@@ -129,18 +149,17 @@ function gui_kintaro() {
                     pcb
                     ;;
                 D)
-                    display_active_and_registered_bluetooth
+                    startoptions
                     ;;
                 U)
                     printMsgs "Updating Package !"
-                    sudo apt-get update
-                    sudo apt-get upgrade kintarosnes
+                    sudo apt-get install --only-upgrade kintarosnes
                     ;;
                 C)
                     remove
                     ;;
                 M)
-                    connect_mode_bluetooth
+                    sudo reboot
                     ;;
             esac
         else

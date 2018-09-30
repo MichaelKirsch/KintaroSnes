@@ -5,7 +5,6 @@ function install_script {
     cp -i pcb.py /opt/kintaro/pcb.py
     rm -f /home/pi/kintarosetup.py
     cp -R start /opt/kintaro/start
-    cp -i kintarosetup.py /home/pi/kintarosetup.py
     chmod +x /opt/kintaro/pcb.py
     useradd -r -s /bin/false kintaro
     chown -R kintaro:kintaro /opt/kintaro

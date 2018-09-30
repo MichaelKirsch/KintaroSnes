@@ -1,8 +1,13 @@
-## Version 3.1.0
+## Version 3.3.0
 
 ## Features
 
-This script uses interrupt controlled buttons for low cpu usage, a speedcontrolled fan (PWM) and a configfile to controll the functions
+This script uses interrupt controlled buttons for low cpu usage, a speedcontrolled fan (PWM) and a scriptmodule to controll the functions from within the 
+RetroPie environment with the controller.
+
+## How to controll the functions:
+
+
 ## Packaging
 
 
