@@ -95,7 +95,8 @@ class SNES:
         if GPIO.input(self.power_pin) == GPIO.HIGH and GPIO.input(
                 self.check_pin) == GPIO.LOW:  # shutdown function if the powerswitch is toggled
             self.led(0)  # led and fan off
-            os.system("killall emulationstation") #end emulationstation
+            self.blink(3, 0.1)
+            os.system("sudo ./opt/kintaro/start/savekill.sh") #end emulationstation
             self.blink(30, 0.1) #wait for the metadata to be safed
             self.fan(0)
             os.system("sudo shutdown -h now")
@@ -117,6 +118,7 @@ class SNES:
                     self.blink(10, 0.5)
                     self.led(1)
             else:
+                self.blink(3, 0.1)
                 os.system("sudo ./opt/kintaro/start/savekill.sh")
                 self.blink(15, 0.1)
                 os.system("sudo reboot")
@@ -124,7 +126,7 @@ class SNES:
     def pcb_interrupt(self, channel):
         GPIO.cleanup()  # when the pcb is pulled clean all the used GPIO pins
 
-    def temp(self):     #returns the gpu temoperature
+    def temp(self):     #returns the gpu temoperatureK
         res = os.popen(self.temp_command).readline()
         return float((res.replace("temp=", "").replace("'C\n", "")))
 

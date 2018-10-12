@@ -13,7 +13,7 @@ if [[ -n "$emucall" ]]; then
     pkill -P "$(echo $emupid | tr ' ' ',')"
     kill "$emupid"
     wait "$emupid"
-    #sleep 5 # maybe it can be lesser
+    sleep 5 # maybe it can be lesser
 fi
 
 kill "$espid"
