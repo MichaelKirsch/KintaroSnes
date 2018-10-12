@@ -6,6 +6,7 @@ function install_script {
     rm -f /home/pi/kintarosetup.py
     cp -R start /opt/kintaro/start
     chmod +x /opt/kintaro/pcb.py
+    chmod +x /opt/kintaro/start/savekill.sh
     useradd -r -s /bin/false kintaro
     chown -R kintaro:kintaro /opt/kintaro
     cp -i kintaro.service /etc/systemd/system/kintaro.service

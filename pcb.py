@@ -117,7 +117,7 @@ class SNES:
                     self.blink(10, 0.5)
                     self.led(1)
             else:
-                os.system("killall emulationstation")
+                os.system("sudo ./opt/kintaro/start/savekill.sh")
                 self.blink(15, 0.1)
                 os.system("sudo reboot")
 
