@@ -5,7 +5,10 @@
 This script uses interrupt controlled buttons for low cpu usage, a speedcontrolled fan (PWM) and a scriptmodule to controll the functions from within the 
 RetroPie environment with the controller.
 
-## How to controll the functions:
+## Install:
+
+Run these commands on your Raspberry: curl -s https://packagecloud.io/install/repositories/kintaro/pcb/script.deb.sh | sudo bash
+sudo apt-get -y install kintarosnes
 
 
 ## Packaging
