@@ -15,16 +15,16 @@ function pwm_menu() {
     if [[ -n "$choice" ]]; then
         case "$choice" in
             1)
-                python3 /opt/kintaro/start/json.py -v "PWM_FAN" -s "1"
+                python3 /opt/kintaro/start/json.py -v "PWM_FAN_OPTION" -s "1"
 
                 printMsgs "set PWM to 50 deg"
                 ;;
             2)
-                python3 /opt/kintaro/start/json.py -v "PWM_FAN" -s "2"
+                python3 /opt/kintaro/start/json.py -v "PWM_FAN_OPTION" -s "2"
                 printMsgs "set PWM to 60 deg"
                 ;;
             3)
-                python3 /opt/kintaro/start/json.py -v "PWM_FAN" -s "3"
+                python3 /opt/kintaro/start/json.py -v "PWM_FAN_OPTION" -s "3"
                 printMsgs "set PWM to 70 deg"
                 ;;
         esac
@@ -44,17 +44,18 @@ function change_fan() {
     if [[ -n "$choice" ]]; then
         case "$choice" in
             1)
+                python3 /opt/kintaro/start/json.py -v "Fan" -s "True"
                 pwm_menu
 
                 ;;
             2)
                 python3 /opt/kintaro/start/json.py -v "Fan" -s "True"
-                python3 /opt/kintaro/start/json.py -v "PWM_FAN" -s "False"
+                python3 /opt/kintaro/start/json.py -v "PWM_FAN_POWER" -s "False"
                 printMsgs "Using default I/O-Fan controll !"
                 ;;
 
             3)
-                python3 /opt/kintaro/start/json.py -v "PWM_FAN" -s "False"
+                python3 /opt/kintaro/start/json.py -v "PWM_FAN_POWER" -s "False"
                 python3 /opt/kintaro/start/json.py -v "Fan" -s "False"
                 printMsgs "No Fan !"
                 ;;

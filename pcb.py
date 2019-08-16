@@ -67,24 +67,32 @@ class SNES:
         GPIO.setup(self.reset_pin, GPIO.IN,
                    pull_up_down=GPIO.PUD_UP)  # set pin as input and switch on internal pull up resistor
         GPIO.setup(self.check_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        pwm_var = self.return_config_bool("PWM_FAN")
+        pwm_var = self.return_config_bool("PWM_FAN_POWER")
+
         if pwm_var is not "False":
-            if pwm_var is "1":
+            pwm_option = self.return_config_int("PWM_FAN_OPTION") # check the option set
+            if pwm_option == 1:
                 self.is_pwm = True
                 self.fan_hysteresis_pwm = 20
                 self.fan_starttemp_pwm = 50
                 self.pwm=GPIO.PWM(self.fan_pin,50)
                 self.pwm.start(0)
-            if pwm_var is "2":
+            if pwm_option == 2:
                 self.is_pwm = True
                 self.fan_hysteresis_pwm = 20
                 self.fan_starttemp_pwm = 60
                 self.pwm=GPIO.PWM(self.fan_pin,50)
                 self.pwm.start(0)
-            if pwm_var is "3":
+            if pwm_option == 3:
                 self.is_pwm = True
                 self.fan_hysteresis_pwm = 20
                 self.fan_starttemp_pwm = 70
+                self.pwm=GPIO.PWM(self.fan_pin,50)
+                self.pwm.start(0)
+            else:
+                self.is_pwm = True
+                self.fan_hysteresis_pwm = 20
+                self.fan_starttemp_pwm = 50
                 self.pwm=GPIO.PWM(self.fan_pin,50)
                 self.pwm.start(0)
 
@@ -124,7 +132,7 @@ class SNES:
     def pcb_interrupt(self, channel):
         GPIO.cleanup()  # when the pcb is pulled clean all the used GPIO pins
 
-    def temp(self):     #returns the gpu temoperature
+    def temp(self):     #returns the gpu temperature
         res = os.popen(self.temp_command).readline()
         return float((res.replace("temp=", "").replace("'C\n", "")))
 
@@ -145,6 +153,11 @@ class SNES:
         Config = configparser.ConfigParser()
         Config.read(self.config_file)  # read the configfile
         return Config.getboolean("Boot", searchterm)
+
+    def return_config_int(self,searchterm):
+        Config = configparser.ConfigParser()
+        Config.read(self.config_file)  # read the configfile
+        return Config.getint("Boot", searchterm)
 
     def fan(self,status):  #switch the fan on or off
         if status == 1:
