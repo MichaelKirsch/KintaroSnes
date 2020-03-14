@@ -4,7 +4,8 @@ Im not working for Kintaro. This software is maintained in my freetime. So pleas
 
 ## Installing on Raspbian/Retropie
 
-run: **sudo gdebi kintarosnes_4.0.0_armhf.deb**
+**dpkg -i kintarosnes.deb**
+**sudo apt-get install -f**
 
 ## Packaging
 
