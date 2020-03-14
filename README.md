@@ -1,23 +1,14 @@
-## Version 3.3.0
+## Version 4.0.0
 
-## Features
+## Installing on Raspbian/Retropie
 
-This script uses interrupt controlled buttons for low cpu usage, a speedcontrolled fan (PWM) and a scriptmodule to controll the functions from within the 
-RetroPie environment with the controller.
-
-## Install:
-
-Run these commands on your Raspberry: curl -s https://packagecloud.io/install/repositories/kintaro/pcb/script.deb.sh | sudo bash
-sudo apt-get -y install kintarosnes
-
+run: **sudo gdebi kintarosnes.deb**
 
 ## Packaging
 
+for packaging use the fpm **https://github.com/jordansissel/fpm** and then run folling command to get a .deb package: 
 
-for packaging use the fpm **https://github.com/jordansissel/fpm** and 
-then run following command to get a .deb package: 
-
-    fpm --log error --after-install install.sh --after-remove  uninstall.sh --architecture armhf --name kintarosnes --version x.x.x -s dir -t deb --vendor Michael --description "Kintaro SNES PCB Driver"  -d python-rpi.gpio -d python3-dialog -d python3-rpi.gpio .
+ fpm --log error --after-install install.sh --after-remove  uninstall.sh --architecture armhf --name kintarosnes --version x.x.x -s dir -t deb --vendor Michael --description "Kintaro SNES PCB Driver"  -d python-rpi.gpio -d python3-dialog -d python3-rpi.gpio .
 
 Our packages are hosted on packagecloud.
  
