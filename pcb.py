@@ -75,24 +75,10 @@ def Falling_Power(channel):
 
 def Falling_Reset(channel):
     if (GPIO.input(pcb_components["RESET"]) == GPIO.LOW):  # reset function
-        reset_counter = 0  # counter for the time funktion
         time.sleep(vars.debounce_time)  # debounce time
-        while (GPIO.input(pcb_components["RESET"]) == GPIO.LOW):  # while the button is hold the counter counts up
-            reset_counter = reset_counter + 1
-            time.sleep(vars.counter_time)
-        if reset_counter > vars.reset_hold_short:  # check if its hold more that one second
-            if reset_counter <= vars.reset_hold_long:  # if you hold it less than 5 sec it will toggle the fan
-                toggle("fan")
-                led.blink(3, 0.5)
-                led.toggle(1)
-            if reset_counter > vars.reset_hold_long:  # if you hold it more than 5 seconds if will toggle the bootupvideo
-                toggle("video")
-                led.blink(10, 0.5)
-                led.toggle(1)
-        else:
-            os.system("killall emulationstation")
-            time.sleep(5)
-            os.system("sudo reboot")
+        os.system("killall emulationstation")
+        time.sleep(5)
+        os.system("sudo reboot")
 
 def PCB_Pull(channel):
     GPIO.cleanup()
