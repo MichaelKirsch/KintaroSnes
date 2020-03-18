@@ -4,6 +4,8 @@ Im not working for Kintaro. This software is maintained in my freetime. So pleas
 
 ## Installing on Raspbian/Retropie
 
+BOTH COMMANDS ARE NEEDED! ERRORS AFTER THE FIRST ONE REGARDING MISSING PACKAGES ARE OKAY! Second command will fix that
+
 **sudo dpkg -i kintarosnes.deb**
 
 **sudo apt-get install -f**
