@@ -4,6 +4,8 @@ Im not working for Kintaro. This software is maintained in my freetime. So pleas
 
 ## Installing on Raspbian/Retropie
 
+You will need to get this whole repository onto your raspberry. You can do that with *git clone  https://github.com/MichaelKirsch/KintaroSnes* and then cd into it. From there on go with these steps:
+
 BOTH COMMANDS ARE NEEDED! ERRORS AFTER THE FIRST ONE REGARDING MISSING PACKAGES ARE OKAY! Second command will fix that
 
 **sudo dpkg -i kintarosnes.deb**
