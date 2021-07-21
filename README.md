@@ -1,3 +1,5 @@
+### NO LONGER SUPPORTED ###
+
 ## Version 4.0.0
 
 Im not working for Kintaro. This software is maintained in my freetime. So please help me out when you find problems and open pull requests
